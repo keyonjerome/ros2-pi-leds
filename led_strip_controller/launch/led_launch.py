@@ -29,6 +29,11 @@ def generate_launch_description():
                     package='led_strip_controller',
                     plugin='led_controller::led_strip_output',
                     name='led_output',
+                    ),
+                ComposableNode(
+                    package='led_strip_controller',
+                    plugin='led_controller::button_pub',
+                    name='button_pub',
                     )   
             ],
             output='screen',

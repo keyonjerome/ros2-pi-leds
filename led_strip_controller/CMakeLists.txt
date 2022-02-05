@@ -47,12 +47,25 @@ ament_target_dependencies(led_output
 # rosidl_target_interfaces(led_output ${PROJECT_NAME} "rosidl_typesupport_cpp") # need this for custom messages - idk why tho
 rclcpp_components_register_node(led_output PLUGIN "led_controller::led_strip_output"  EXECUTABLE led_outputter)
 
+#add led_output as plugin
+add_library(button_pub SHARED
+	src/button_pub.cpp)
+target_compile_definitions(button_pub
+	PRIVATE "LED_CONTROLLER_DLL")
+ament_target_dependencies(button_pub
+	"rclcpp"
+	"rclcpp_components"
+	"std_msgs")
+# rosidl_target_interfaces(led_output ${PROJECT_NAME} "rosidl_typesupport_cpp") # need this for custom messages - idk why tho
+rclcpp_components_register_node(button_pub PLUGIN "led_controller::button_pub"  EXECUTABLE button_publisher)
+
 
 
 #tell where to put binaries
 install(TARGETS
 
   led_output
+  button_pub
 
 	ARCHIVE DESTINATION lib
 	LIBRARY DESTINATION lib 
