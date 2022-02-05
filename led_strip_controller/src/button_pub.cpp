@@ -8,6 +8,14 @@ using namespace std::placeholders;
 namespace led_controller
 {
 
+    std_msgs::msg::ColorRGBA button_pub::new_color(float r,float g, float b, float a) {
+        std_msgs::msg::ColorRGBA color;
+        color.r = r;
+        color.g = g;
+        color.b = b;
+        color.a = a;
+        return color;
+    }
 
     button_pub::button_pub(const rclcpp::NodeOptions &options) :Node("button_pub", options) {
 
@@ -18,19 +26,21 @@ namespace led_controller
       "led_controller1/current_color", 10, std::bind(&button_pub::curr_color_sub_callback, this, _1));
         this->color_pub_timer = this->create_wall_timer(
       500ms, std::bind(&button_pub::update_new_color, this));
-
+        
+        this->color_map["red"] = new_color(255,0,0,0);
+        this->color_map["blue"] = new_color(0,0,255,0);
 
         // define color consts
-        this->color_map["red"] = std_msgs::msg::ColorRGBA();
-        this->color_map["red"].r = 255;
-        this->color_map["red"].g = 0;
-        this->color_map["red"].b = 0;
+        // this->color_map["red"] = std_msgs::msg::ColorRGBA();
+        // this->color_map["red"].r = 255;
+        // this->color_map["red"].g = 0;
+        // this->color_map["red"].b = 0;
 
 
-        this->color_map["blue"] = std_msgs::msg::ColorRGBA();
-        this->color_map["blue"].r = 0;
-        this->color_map["blue"].g = 0;
-        this->color_map["blue"].b = 255;
+        // this->color_map["blue"] = std_msgs::msg::ColorRGBA();
+        // this->color_map["blue"].r = 0;
+        // this->color_map["blue"].g = 0;
+        // this->color_map["blue"].b = 255;
 
 
 

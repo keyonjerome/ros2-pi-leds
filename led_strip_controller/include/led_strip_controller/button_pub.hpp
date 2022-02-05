@@ -31,6 +31,9 @@ private:
   LED_CONTROLLER_LOCAL
   void update_new_color();
 
+  LED_CONTROLLER_LOCAL
+  std_msgs::msg::ColorRGBA new_color(float r, float g, float b, float a);
+
 
   std::map<std::string,std_msgs::msg::ColorRGBA> color_map;
   // std::shared_ptr<std_msgs::msg::ColorRGBA> curr_color_msg = std::make_unique<std_msgs::msg::ColorRGBA>(); 
