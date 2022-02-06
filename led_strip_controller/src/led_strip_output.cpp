@@ -1,5 +1,6 @@
 #include <chrono>
 #include <led_strip_controller/led_strip_output.hpp>
+#include <pigpio.h>
 
 using namespace std::literals::chrono_literals;
 
@@ -47,7 +48,17 @@ namespace led_controller
 
     void led_strip_output::set_strip_color(const std_msgs::msg::ColorRGBA color) {
         
-        // wiringPi code
+
+        
+        if(gpioPWM(RED_GPIO,static_cast<int>(color.r)) != 0) {
+            RCLCPP_ERROR(this->get_logger(),"SET_STRIP_COLOR ERROR: PI_BAD_USER_GPIO or PI_BAD_DUTYCYCLE WITH GPIO ADDRESS %i",RED_GPIO);
+        }
+        if(gpioPWM(GREEN_GPIO,static_cast<int>(color.g)) != 0) {
+            RCLCPP_ERROR(this->get_logger(),"SET_STRIP_COLOR ERROR: PI_BAD_USER_GPIO or PI_BAD_DUTYCYCLE WITH GPIO ADDRESS %i",GREEN_GPIO);
+        }
+        if(gpioPWM(BLUE_GPIO,static_cast<int>(color.b)) != 0) {
+            RCLCPP_ERROR(this->get_logger(),"SET_STRIP_COLOR ERROR: PI_BAD_USER_GPIO or PI_BAD_DUTYCYCLE WITH GPIO ADDRESS %i",BLUE_GPIO);
+        }
 
     }
 

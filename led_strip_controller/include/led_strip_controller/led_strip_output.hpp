@@ -53,6 +53,11 @@ private:
   // set quality of service depth - AKA a backlog
   static constexpr unsigned int QUEUE{10};
 
+  static constexpr unsigned int RED_GPIO{2};
+  static constexpr unsigned int GREEN_GPIO{3};
+  static constexpr unsigned int BLUE_GPIO{4};
+
+
 
 };
 
