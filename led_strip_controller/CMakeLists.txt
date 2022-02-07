@@ -25,6 +25,12 @@ find_package(rcl REQUIRED)
 find_package(rclcpp_action REQUIRED)
 find_package(builtin_interfaces REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
+
+
+set( CMAKE_MODULE_PATH /home/keyon/pigpio-master/util)
+
+find_package(pigpio REQUIRED)
+
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
