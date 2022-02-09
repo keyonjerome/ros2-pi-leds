@@ -27,7 +27,7 @@ find_package(builtin_interfaces REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 
 
-set( CMAKE_MODULE_PATH /home/keyon/pigpio-master/util)
+set( CMAKE_MODULE_PATH $ENV{HOME}/pigpio-master/util)
 
 find_package(pigpio REQUIRED)
 
