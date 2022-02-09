@@ -29,6 +29,13 @@ find_package(rosidl_default_generators REQUIRED)
 
 set( CMAKE_MODULE_PATH $ENV{HOME}/pigpio-master/util)
 
+find_library(PIGPIO_LIBRARIES NAMES pigpio)
+find_path(PIGPIO_INCLUDE_DIRS NAMES pigpio.h)
+
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(pigpio DEFAULT_MSG PIGPIO_LIBRARIES PIGPIO_INCLUDE_DIRS)
+
+
 find_package(pigpio REQUIRED)
 
 # uncomment the following section in order to fill in
@@ -46,10 +53,13 @@ add_library(led_output SHARED
 	src/led_strip_output.cpp)
 target_compile_definitions(led_output
 	PRIVATE "LED_CONTROLLER_DLL")
+target_link_libraries(led_output pigpio)
 ament_target_dependencies(led_output
 	"rclcpp"
 	"rclcpp_components"
-	"std_msgs")
+	"std_msgs"
+	"pigpio"
+	)
 # rosidl_target_interfaces(led_output ${PROJECT_NAME} "rosidl_typesupport_cpp") # need this for custom messages - idk why tho
 rclcpp_components_register_node(led_output PLUGIN "led_controller::led_strip_output"  EXECUTABLE led_outputter)
 
