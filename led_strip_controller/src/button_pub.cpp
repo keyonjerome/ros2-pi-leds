@@ -77,7 +77,7 @@ namespace led_controller
 
     bool button_pub::get_button_status() {
 
-      return gpioRead(BUTTON_GPIO) == 1;
+      return !(gpioRead(BUTTON_GPIO) == 1);
 
     }
 
