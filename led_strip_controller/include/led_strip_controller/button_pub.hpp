@@ -42,6 +42,8 @@ private:
   // std::shared_ptr<std_msgs::msg::ColorRGBA> curr_color_msg = std::make_unique<std_msgs::msg::ColorRGBA>(); 
 
   std::shared_ptr<std_msgs::msg::ColorRGBA> curr_color = std::make_unique<std_msgs::msg::ColorRGBA>();
+  std::map<int,std::string> color_int_map;
+  std::shared_ptr<int> curr_color_int{0};
 
   // subscription
   rclcpp::Subscription<std_msgs::msg::ColorRGBA>::SharedPtr curr_color_sub;
@@ -55,8 +57,15 @@ private:
   // set quality of service depth - AKA a backlog
   static constexpr unsigned int QUEUE{10};
 
-  static constexpr unsigned int BUTTON_GPIO{2};
+  static constexpr unsigned int BUTTON_GPIO{17};
   static constexpr float HOLD_TIME{0.25};
+
+  static constexpr long debounce_delay{50};
+  // Timer button_t;
+  bool last_reading{false};
+  long last_debounce_time{50};
+  bool published{true};
+  int color_counter = 0;
 
 
 };
