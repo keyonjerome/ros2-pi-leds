@@ -83,10 +83,10 @@ namespace led_controller
 
     void button_pub::update_new_color() {
     
-        (*(this->curr_color_int).get())++;
+        this->curr_color_int++;
         // reset to first color if at end of color wheel
-        // if(this->curr_color == this->color_int_map.size()) this->curr_color = 0;
-        std::string color = this->color_int_map[(*this->curr_color_int.get())];
+        if(this->curr_color_int == this->color_int_map.size()) this->curr_color_int = 0;
+        std::string color = this->color_int_map[this->curr_color_int];
         this->new_color_pub->publish(this->color_map[color]);
 
 

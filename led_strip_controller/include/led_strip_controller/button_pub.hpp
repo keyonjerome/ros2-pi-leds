@@ -43,7 +43,7 @@ private:
 
   std::shared_ptr<std_msgs::msg::ColorRGBA> curr_color = std::make_unique<std_msgs::msg::ColorRGBA>();
   std::map<int,std::string> color_int_map;
-  std::shared_ptr<int> curr_color_int{0};
+  int curr_color_int{0};
 
   // subscription
   rclcpp::Subscription<std_msgs::msg::ColorRGBA>::SharedPtr curr_color_sub;
