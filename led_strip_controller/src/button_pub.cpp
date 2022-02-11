@@ -48,7 +48,8 @@ namespace led_controller
         this->color_int_map[1] = blue;
         this->color_int_map[2] = medium_slate_blue;
 
-        // std::thread button_thread(&button_pub::button_loop);
+        // std::thread button_thread(std::bind(&button_pub::button_loop,this));
+        button_loop();
     }
 
     void button_pub::button_loop() {
@@ -87,6 +88,7 @@ namespace led_controller
         // reset to first color if at end of color wheel
         if(this->curr_color_int == this->color_int_map.size()) this->curr_color_int = 0;
         std::string color = this->color_int_map[this->curr_color_int];
+        RCLCPP_INFO(this->get_logger(),"UPDATING NEW_COLOR TO %s | COLOR INT: %i ", color.c_str(),curr_color_int);
         this->new_color_pub->publish(this->color_map[color]);
 
 
