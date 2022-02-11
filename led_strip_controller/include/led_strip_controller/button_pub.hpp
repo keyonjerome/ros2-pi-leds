@@ -32,6 +32,9 @@ private:
   void update_new_color();
 
   LED_CONTROLLER_LOCAL
+  void button_loop();
+
+  LED_CONTROLLER_LOCAL
   std_msgs::msg::ColorRGBA new_color(float r, float g, float b, float a);
 
 
@@ -51,6 +54,9 @@ private:
 
   // set quality of service depth - AKA a backlog
   static constexpr unsigned int QUEUE{10};
+
+  static constexpr unsigned int BUTTON_GPIO{2};
+  static constexpr float HOLD_TIME{0.25};
 
 
 };

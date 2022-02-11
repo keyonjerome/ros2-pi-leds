@@ -1,5 +1,6 @@
 #include <chrono>
 #include <led_strip_controller/button_pub.hpp>
+#include <pigpio.h>
 
 using namespace std::literals::chrono_literals;
 
@@ -29,6 +30,7 @@ namespace led_controller
         
         this->color_map["red"] = new_color(255,0,0,0);
         this->color_map["blue"] = new_color(0,0,255,0);
+        this->color_map["medium_slate_blue"] = new_color(106,90,205,0);
 
         // define color consts
         // this->color_map["red"] = std_msgs::msg::ColorRGBA();
@@ -36,13 +38,16 @@ namespace led_controller
         // this->color_map["red"].g = 0;
         // this->color_map["red"].b = 0;
 
-
         // this->color_map["blue"] = std_msgs::msg::ColorRGBA();
         // this->color_map["blue"].r = 0;
         // this->color_map["blue"].g = 0;
         // this->color_map["blue"].b = 255;
 
+    }
 
+    void button_pub::button_loop() {
+        
+        // TODO
 
     }
     
@@ -50,7 +55,7 @@ namespace led_controller
     bool button_pub::get_button_status() {
 
       // placeholder
-      return true;
+      return gpioRead(BUTTON_GPIO) == 1;
 
     }
 

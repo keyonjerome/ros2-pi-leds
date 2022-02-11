@@ -68,10 +68,13 @@ add_library(button_pub SHARED
 	src/button_pub.cpp)
 target_compile_definitions(button_pub
 	PRIVATE "LED_CONTROLLER_DLL")
+target_link_libraries(button_pub pigpio)
 ament_target_dependencies(button_pub
 	"rclcpp"
 	"rclcpp_components"
-	"std_msgs")
+	"std_msgs"
+	"pigpio"
+	)
 # rosidl_target_interfaces(led_output ${PROJECT_NAME} "rosidl_typesupport_cpp") # need this for custom messages - idk why tho
 rclcpp_components_register_node(button_pub PLUGIN "led_controller::button_pub"  EXECUTABLE button_publisher)
 
