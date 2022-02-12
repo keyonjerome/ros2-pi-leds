@@ -29,18 +29,18 @@ private:
   LED_CONTROLLER_LOCAL
   std_msgs::msg::ColorRGBA get_strip_color();
 
-  LED_CONTROLLER_LOCAL
-  void curr_color_pub_callback();
+  // LED_CONTROLLER_LOCAL
+  // void curr_color_pub_callback();
 
   LED_CONTROLLER_LOCAL
   void new_color_sub_callback(const std_msgs::msg::ColorRGBA msg);
 
-  LED_CONTROLLER_LOCAL
-  void update_curr_color();
+  // LED_CONTROLLER_LOCAL
+  // void update_curr_color();
 
 
   // publisher
-  rclcpp::Publisher<std_msgs::msg::ColorRGBA>::SharedPtr curr_color_pub;
+  // rclcpp::Publisher<std_msgs::msg::ColorRGBA>::SharedPtr curr_color_pub;
   
   // subscriber
   rclcpp::Subscription<std_msgs::msg::ColorRGBA>::SharedPtr new_color_sub;
@@ -48,7 +48,7 @@ private:
   // callback timer
   rclcpp::TimerBase::SharedPtr timer;
   
-  std::shared_ptr<std_msgs::msg::ColorRGBA> curr_color_msg = std::make_unique<std_msgs::msg::ColorRGBA>(); 
+  // std::shared_ptr<std_msgs::msg::ColorRGBA> curr_color_msg = std::make_unique<std_msgs::msg::ColorRGBA>(); 
 
   // set quality of service depth - AKA a backlog
   static constexpr unsigned int QUEUE{10};
