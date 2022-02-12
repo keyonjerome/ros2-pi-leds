@@ -1,16 +1,16 @@
 #include <pigpio.h>
 #include <sys/time.h>
-
 #include <chrono>
 #include <ctime>
 #include <led_strip_controller/button_pub.hpp>
 
 using namespace std::literals::chrono_literals;
-
 using namespace std::placeholders;
 
 namespace led_controller
 {
+
+// Helper function for creating ColorRGBA msg objects.
 std_msgs::msg::ColorRGBA button_pub::new_color(float r, float g, float b, float a)
 {
   std_msgs::msg::ColorRGBA color;
@@ -20,28 +20,20 @@ std_msgs::msg::ColorRGBA button_pub::new_color(float r, float g, float b, float 
   color.a = a;
   return color;
 }
-// bool operator == (std_msgs::msg::ColorRGBA & lhs, std_msgs::msg::ColorRGBA, std_msgs::msg::ColorRGBA & rhs) {
-//     // we don't use the A value
-//     return lhs.r == rhs.r && lhs.g == rhs.g && && lhs.b == rhs.b;
-// }
 
 button_pub::button_pub(const rclcpp::NodeOptions & options) : Node("button_pub", options)
-{
+{ 
+  // use internal raspberry pi pull up resistor on button (to avoid need for second resistor)
   gpioSetPullUpDown(BUTTON_GPIO, PI_PUD_UP);
+  
 
+  // Define publishers and subscribers
   this->new_color_pub = this->create_publisher<std_msgs::msg::ColorRGBA>(
     "led_controller1/new_color", rclcpp::QoS(QUEUE));
-
-  this->curr_color_sub = this->create_subscription<std_msgs::msg::ColorRGBA>(
-    "led_controller1/current_color", 10, std::bind(&button_pub::curr_color_sub_callback, this, _1));
-  //     this->button_stat_sub =  this->create_subscription<std_msgs::msg::Bool>(
-  //   "led_controller1/current_color", 10, std::bind(&button_pub::button_stat_sub_callback, this, _1));
-
+  
+  // Query the button status every 10ms.
   this->button_pub_timer =
     this->create_wall_timer(10ms, std::bind(&button_pub::button_status_pub, this));
-
-  // this->color_pub_timer = this->create_wall_timer(
-  //   500ms, std::bind(&button_pub::update_new_color, this));
 
   // It would be better to create a custom msg and use a multi-index map for this,
   // but in the interest of time this is alright.
@@ -51,7 +43,8 @@ button_pub::button_pub(const rclcpp::NodeOptions & options) : Node("button_pub",
   std::string purple = "purple";
   std::string medium_slate_blue = "medium_slate_blue";
   std::string off = "off";
-
+  
+  // Define all colors
   this->color_map[white] = new_color(255, 255, 255, 0);
   this->color_map[red] = new_color(255, 0, 0, 0);
   this->color_map[blue] = new_color(0, 0, 255, 0);
@@ -68,26 +61,33 @@ button_pub::button_pub(const rclcpp::NodeOptions & options) : Node("button_pub",
   this->color_int_map[4] = medium_slate_blue;
   this->color_int_map[5] = off;
 
-  // std::thread button_thread(std::bind(&button_pub::button_loop,this));
 }
 
+// Get system time in milliseconds.
 int64_t get_time_millis()
 {
   return duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 }
+
+// Query the button and if it is pressed & debounced, send a new color to the LED strip.
 void button_pub::button_status_pub()
 {
+
   bool reading = get_button_status();
-  RCLCPP_INFO(this->get_logger(), "BUTTON: %s ", reading ? "TRUE" : "FALSE");
+
+//   RCLCPP_INFO(this->get_logger(), "BUTTON: %s ", reading ? "TRUE" : "FALSE");
 
   auto curr_time = get_time_millis();
+  
   if (last_reading != reading) {
     last_debounce_time = curr_time;
-    RCLCPP_INFO(this->get_logger(), "DEBOUNCE TIME UPDATE: %li", last_debounce_time);
+    // RCLCPP_INFO(this->get_logger(), "DEBOUNCE TIME UPDATE: %li", last_debounce_time);
     published = false;
   }
-  RCLCPP_INFO(this->get_logger(), "TIME DIFF %li", (curr_time - last_debounce_time));
-  //if the button value has not changed for the debounce delay, we know its stable
+
+//   RCLCPP_INFO(this->get_logger(), "TIME DIFF %li", (curr_time - last_debounce_time));
+//   If the button value has not changed for the debounce delay, we know it's stable.
+//   If it's stable and the button is pressed (true), and we haven't changed the color yet (published), then change the color. 
   if (!published && ((curr_time - last_debounce_time) > debounce_delay) && reading) {
     RCLCPP_INFO(this->get_logger(), "UPDATING COLOR FROM BUTTON PRESS");
     update_new_color();
@@ -97,47 +97,24 @@ void button_pub::button_status_pub()
   last_reading = reading;
 }
 
+// Get the button status from GPIO (true if pressed).
 bool button_pub::get_button_status() { return !(gpioRead(BUTTON_GPIO) == 1); }
 
+// Activates a color change.
 void button_pub::update_new_color()
 {
+
   this->curr_color_int++;
   // reset to first color if at end of color wheel
   if (this->curr_color_int == this->color_int_map.size()) this->curr_color_int = 0;
+  // use map to get the string for the next color
   std::string color = this->color_int_map[this->curr_color_int];
   RCLCPP_INFO(
     this->get_logger(), "UPDATING NEW_COLOR TO %s | COLOR INT: %i ", color.c_str(), curr_color_int);
+
   this->new_color_pub->publish(this->color_map[color]);
 }
 
-// called whenever a new value is published to "led_controller1/current_color"
-// void button_pub::button_stat_sub_callback(const std_msgs::msg::Bool msg) {
-
-//     curr_color->r = msg.r;
-//     curr_color->g = msg.g;
-//     curr_color->b = msg.b;
-//     curr_color->a = msg.a;
-
-//     RCLCPP_INFO(this->get_logger(), "curr-color %f, %f, %f, %f",
-//         curr_color->r,
-//         curr_color->g,
-//         curr_color->b,
-//         curr_color->a
-//     );
-
-// }
-// called whenever a new value is published to "led_controller1/current_color"
-void button_pub::curr_color_sub_callback(const std_msgs::msg::ColorRGBA msg)
-{
-  curr_color->r = msg.r;
-  curr_color->g = msg.g;
-  curr_color->b = msg.b;
-  curr_color->a = msg.a;
-
-  RCLCPP_INFO(
-    this->get_logger(), "curr-color %f, %f, %f, %f", curr_color->r, curr_color->g, curr_color->b,
-    curr_color->a);
-}
 
 }  // namespace led_controller
 

@@ -1,15 +1,15 @@
 cmake_minimum_required(VERSION 3.8)
 project(led_strip_controller)
 
-# # Default to C99
-# if(NOT CMAKE_C_STANDARD)
-#   set(CMAKE_C_STANDARD 99)
-# endif()
+# Default to C99
+if(NOT CMAKE_C_STANDARD)
+  set(CMAKE_C_STANDARD 99)
+endif()
 
-# # Default to C++14
-# if(NOT CMAKE_CXX_STANDARD)
-#   set(CMAKE_CXX_STANDARD 14)
-# endif()
+# Default to C++14
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 14)
+endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -26,21 +26,14 @@ find_package(rclcpp_action REQUIRED)
 find_package(builtin_interfaces REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 
-
+# add pigpio support; assume installed to home/[user]/pigpio-master per instructions
 set( CMAKE_MODULE_PATH $ENV{HOME}/pigpio-master/util)
-
 find_library(PIGPIO_LIBRARIES NAMES pigpio)
 find_path(PIGPIO_INCLUDE_DIRS NAMES pigpio.h)
-
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(pigpio DEFAULT_MSG PIGPIO_LIBRARIES PIGPIO_INCLUDE_DIRS)
 
-
 find_package(pigpio REQUIRED)
-
-# uncomment the following section in order to fill in
-# further dependencies manually.
-# find_package(<dependency> REQUIRED)
 
 #include the 'include' directory
 include_directories(include)
@@ -48,7 +41,7 @@ include_directories(include)
 #create resource which references the libraries in the binary bin
 set(node_plugins "")
 
-#add led_output as plugin
+#add led_output as plugin AND executable
 add_library(led_output SHARED
 	src/led_strip_output.cpp)
 target_compile_definitions(led_output
@@ -60,10 +53,10 @@ ament_target_dependencies(led_output
 	"std_msgs"
 	"pigpio"
 	)
-# rosidl_target_interfaces(led_output ${PROJECT_NAME} "rosidl_typesupport_cpp") # need this for custom messages - idk why tho
+# rosidl_target_interfaces(led_output ${PROJECT_NAME} "rosidl_typesupport_cpp") # required for custom messages
 rclcpp_components_register_node(led_output PLUGIN "led_controller::led_strip_output"  EXECUTABLE led_outputter)
 
-#add led_output as plugin
+#add button_pub as plugin AND executable
 add_library(button_pub SHARED
 	src/button_pub.cpp)
 target_compile_definitions(button_pub
@@ -75,12 +68,10 @@ ament_target_dependencies(button_pub
 	"std_msgs"
 	"pigpio"
 	)
-# rosidl_target_interfaces(led_output ${PROJECT_NAME} "rosidl_typesupport_cpp") # need this for custom messages - idk why tho
+# rosidl_target_interfaces(led_output ${PROJECT_NAME} "rosidl_typesupport_cpp") # required for custom messages
 rclcpp_components_register_node(button_pub PLUGIN "led_controller::button_pub"  EXECUTABLE button_publisher)
 
-
-
-#tell where to put binaries
+#tell colcon where to put binaries
 install(TARGETS
 
   led_output

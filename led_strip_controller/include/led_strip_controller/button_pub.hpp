@@ -44,12 +44,11 @@ private:
   LED_CONTROLLER_LOCAL
   std_msgs::msg::ColorRGBA new_color(float r, float g, float b, float a);
 
+  // keep all colors in color wheel in map
   std::map<std::string, std_msgs::msg::ColorRGBA> color_map;
-  // std::shared_ptr<std_msgs::msg::ColorRGBA> curr_color_msg = std::make_unique<std_msgs::msg::ColorRGBA>();
-
-  std::shared_ptr<std_msgs::msg::ColorRGBA> curr_color =
-    std::make_unique<std_msgs::msg::ColorRGBA>();
+  // use two maps with an int instead of using multi-indexed map (to reduce code bloat)
   std::map<int, std::string> color_int_map;
+  // current color
   unsigned int curr_color_int{0};
 
   // subscription
@@ -57,22 +56,22 @@ private:
 
   // publisher
   rclcpp::Publisher<std_msgs::msg::ColorRGBA>::SharedPtr new_color_pub;
+
   // callback timer
   rclcpp::TimerBase::SharedPtr button_pub_timer;
   rclcpp::TimerBase::SharedPtr color_pub_timer;
 
-  // set quality of service depth - AKA a backlog
+  // set quality of service depth - a backlog
   static constexpr unsigned int QUEUE{10};
-
   static constexpr unsigned int BUTTON_GPIO{17};
-  static constexpr float HOLD_TIME{0.25};
 
-  int64_t debounce_delay{50};
-  // Timer button_t;
+  // define how long it takes for the button to be considered debounced
+  const int64_t debounce_delay{50};
+
   bool last_reading{false};
   int64_t last_debounce_time;
+  // hold whether the button has published a new color yet (for that button press)
   bool published{true};
-  int color_counter = 0;
 };
 
 }  // namespace led_controller
