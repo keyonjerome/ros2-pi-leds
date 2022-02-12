@@ -31,7 +31,13 @@ namespace led_controller
        
        this->curr_color_sub = this->create_subscription<std_msgs::msg::ColorRGBA>(
       "led_controller1/current_color", 10, std::bind(&button_pub::curr_color_sub_callback, this, _1));
-        this->color_pub_timer = this->create_wall_timer(
+    //     this->button_stat_sub =  this->create_subscription<std_msgs::msg::Bool>(
+    //   "led_controller1/current_color", 10, std::bind(&button_pub::button_stat_sub_callback, this, _1));
+
+        this->button_pub_timer = this->create_wall_timer(
+      10ms, std::bind(&button_pub::button_status_pub, this));
+
+    this->color_pub_timer = this->create_wall_timer(
       500ms, std::bind(&button_pub::update_new_color, this));
         
         std::string red = "red"; 
@@ -49,14 +55,10 @@ namespace led_controller
         this->color_int_map[2] = medium_slate_blue;
 
         // std::thread button_thread(std::bind(&button_pub::button_loop,this));
-        button_loop();
     }
 
-    void button_pub::button_loop() {
-        
-        while(true) {
-
-            bool reading = get_button_status();
+    void button_pub::button_status_pub() {
+        bool reading = get_button_status();
             
             if(last_reading != reading) {
                 last_debounce_time = time(nullptr)*1000;
@@ -64,17 +66,13 @@ namespace led_controller
             }
 
             //if the button value has not changed for the debounce delay, we know its stable
-            if ( !published && (time(nullptr)*1000 - last_debounce_time)  > debounce_delay) {
-
+            if ( !published && (time(nullptr)*1000 - last_debounce_time)  > debounce_delay && reading) {
                 update_new_color();
                 published = true;
             }
 
             last_reading = reading;
-        }
-
     }
-    
 
     bool button_pub::get_button_status() {
 
@@ -94,6 +92,22 @@ namespace led_controller
 
     }
 
+        // called whenever a new value is published to "led_controller1/current_color"
+    // void button_pub::button_stat_sub_callback(const std_msgs::msg::Bool msg) {
+        
+    //     curr_color->r = msg.r;
+    //     curr_color->g = msg.g;
+    //     curr_color->b = msg.b;
+    //     curr_color->a = msg.a;
+
+    //     RCLCPP_INFO(this->get_logger(), "curr-color %f, %f, %f, %f",
+    //         curr_color->r,
+    //         curr_color->g,
+    //         curr_color->b,
+    //         curr_color->a
+    //     );
+
+    // }
     // called whenever a new value is published to "led_controller1/current_color"
     void button_pub::curr_color_sub_callback(const std_msgs::msg::ColorRGBA msg) {
          

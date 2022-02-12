@@ -33,6 +33,9 @@ private:
 
   LED_CONTROLLER_LOCAL
   void button_loop();
+  
+  LED_CONTROLLER_LOCAL
+  void button_status_pub();
 
   LED_CONTROLLER_LOCAL
   std_msgs::msg::ColorRGBA new_color(float r, float g, float b, float a);
@@ -43,7 +46,7 @@ private:
 
   std::shared_ptr<std_msgs::msg::ColorRGBA> curr_color = std::make_unique<std_msgs::msg::ColorRGBA>();
   std::map<int,std::string> color_int_map;
-  int curr_color_int{0};
+  unsigned int curr_color_int{0};
 
   // subscription
   rclcpp::Subscription<std_msgs::msg::ColorRGBA>::SharedPtr curr_color_sub;
@@ -51,7 +54,7 @@ private:
   // publisher
   rclcpp::Publisher<std_msgs::msg::ColorRGBA>::SharedPtr new_color_pub;
   // callback timer
-  rclcpp::TimerBase::SharedPtr button_timer;
+  rclcpp::TimerBase::SharedPtr button_pub_timer;
   rclcpp::TimerBase::SharedPtr color_pub_timer;
 
   // set quality of service depth - AKA a backlog
