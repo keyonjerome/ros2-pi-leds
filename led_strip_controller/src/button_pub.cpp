@@ -28,7 +28,7 @@ namespace led_controller
         
 
         gpioSetPullUpDown(BUTTON_GPIO, PI_PUD_UP); 
-        
+
         this->new_color_pub = this->create_publisher<std_msgs::msg::ColorRGBA>(
             "led_controller1/new_color", rclcpp::QoS(QUEUE));
        
@@ -55,7 +55,7 @@ namespace led_controller
         this->color_map[white] = new_color(255,255,255,0);
         this->color_map[red] = new_color(255,0,0,0);
         this->color_map[blue] = new_color(0,0,255,0);
-        this->color_map[purple] = new_color(255,255,0,0);
+        this->color_map[purple] = new_color(255,0,255,0);
         this->color_map[medium_slate_blue] = new_color(106,90,205,0);
         this->color_map[off] = new_color(0,0,0,0);
 
