@@ -25,7 +25,10 @@ namespace led_controller
     // }
 
     button_pub::button_pub(const rclcpp::NodeOptions &options) :Node("button_pub", options) {
+        
 
+        gpioSetPullUpDown(BUTTON_GPIO, PI_PUD_UP); 
+        
         this->new_color_pub = this->create_publisher<std_msgs::msg::ColorRGBA>(
             "led_controller1/new_color", rclcpp::QoS(QUEUE));
        
