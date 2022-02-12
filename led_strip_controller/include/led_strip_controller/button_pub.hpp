@@ -11,6 +11,12 @@
 
 #include <led_strip_controller/visibility.h>
 
+using std::chrono::duration_cast;
+using std::chrono::duration;
+using std::chrono::milliseconds;
+using std::chrono::seconds;
+using std::chrono::system_clock;
+
 namespace led_controller {
 
 class button_pub : public rclcpp::Node {
@@ -63,10 +69,10 @@ private:
   static constexpr unsigned int BUTTON_GPIO{17};
   static constexpr float HOLD_TIME{0.25};
 
-  static constexpr long debounce_delay{50};
+  int64_t debounce_delay{50};
   // Timer button_t;
   bool last_reading{false};
-  long last_debounce_time{50};
+  int64_t last_debounce_time;
   bool published{true};
   int color_counter = 0;
 

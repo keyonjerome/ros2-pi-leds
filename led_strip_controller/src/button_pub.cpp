@@ -71,18 +71,22 @@ namespace led_controller
         // std::thread button_thread(std::bind(&button_pub::button_loop,this));
     }
 
+    int64_t get_time_millis() {
+         return duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+    }
     void button_pub::button_status_pub() {
         bool reading = get_button_status();
         RCLCPP_INFO(this->get_logger(),"BUTTON: %s ", reading ? "TRUE" : "FALSE");
 
+            auto curr_time = get_time_millis();
             if(last_reading != reading) {
-                last_debounce_time = time(nullptr)*1000;
+                last_debounce_time = curr_time;
                 RCLCPP_INFO(this->get_logger(),"DEBOUNCE TIME UPDATE: %li", last_debounce_time);
                 published = false;
             }
-            RCLCPP_INFO(this->get_logger(),"TIME DIFF %li", (time(nullptr)*1000 - last_debounce_time));
+            RCLCPP_INFO(this->get_logger(),"TIME DIFF %li", (curr_time - last_debounce_time));
             //if the button value has not changed for the debounce delay, we know its stable
-            if ( !published && (time(nullptr)*1000 - last_debounce_time)  > debounce_delay && reading) {
+            if ( !published && ((curr_time - last_debounce_time)  > debounce_delay) && reading) {
                 RCLCPP_INFO(this->get_logger(), "UPDATING COLOR FROM BUTTON PRESS");
                 update_new_color();
                 published = true;
