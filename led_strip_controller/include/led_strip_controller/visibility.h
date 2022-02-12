@@ -17,8 +17,7 @@
 #define LED_CONTROLLER__VISIBILITY_H_
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 // This logic was borrowed (then namespaced) from the examples on the gcc wiki:
@@ -26,38 +25,38 @@ extern "C"
 
 #if defined _WIN32 || defined __CYGWIN__
 
-  #ifdef __GNUC__
-    #define LED_CONTROLLER_EXPORT __attribute__ ((dllexport))
-    #define LED_CONTROLLER_IMPORT __attribute__ ((dllimport))
-  #else
-    #define LED_CONTROLLER_EXPORT __declspec(dllexport)
-    #define LED_CONTROLLER_IMPORT __declspec(dllimport)
-  #endif
+#ifdef __GNUC__
+#define LED_CONTROLLER_EXPORT __attribute__((dllexport))
+#define LED_CONTROLLER_IMPORT __attribute__((dllimport))
+#else
+#define LED_CONTROLLER_EXPORT __declspec(dllexport)
+#define LED_CONTROLLER_IMPORT __declspec(dllimport)
+#endif
 
-  #ifdef LED_CONTROLLER_DLL
-    #define LED_CONTROLLER_PUBLIC LED_CONTROLLER_EXPORT
-  #else
-    #define LED_CONTROLLER_PUBLIC LED_CONTROLLER_IMPORT
-  #endif
+#ifdef LED_CONTROLLER_DLL
+#define LED_CONTROLLER_PUBLIC LED_CONTROLLER_EXPORT
+#else
+#define LED_CONTROLLER_PUBLIC LED_CONTROLLER_IMPORT
+#endif
 
-  #define LED_CONTROLLER_PUBLIC_TYPE LED_CONTROLLER_PUBLIC
+#define LED_CONTROLLER_PUBLIC_TYPE LED_CONTROLLER_PUBLIC
 
-  #define LED_CONTROLLER_LOCAL
+#define LED_CONTROLLER_LOCAL
 
 #else
 
-  #define LED_CONTROLLER_EXPORT __attribute__ ((visibility("default")))
-  #define LED_CONTROLLER_IMPORT
+#define LED_CONTROLLER_EXPORT __attribute__((visibility("default")))
+#define LED_CONTROLLER_IMPORT
 
-  #if __GNUC__ >= 4
-    #define LED_CONTROLLER_PUBLIC __attribute__ ((visibility("default")))
-    #define LED_CONTROLLER_LOCAL  __attribute__ ((visibility("hidden")))
-  #else
-    #define LED_CONTROLLER_PUBLIC
-    #define LED_CONTROLLER_LOCAL
-  #endif
+#if __GNUC__ >= 4
+#define LED_CONTROLLER_PUBLIC __attribute__((visibility("default")))
+#define LED_CONTROLLER_LOCAL __attribute__((visibility("hidden")))
+#else
+#define LED_CONTROLLER_PUBLIC
+#define LED_CONTROLLER_LOCAL
+#endif
 
-  #define LED_CONTROLLER_PUBLIC_TYPE
+#define LED_CONTROLLER_PUBLIC_TYPE
 #endif
 
 #ifdef __cplusplus
