@@ -6,8 +6,8 @@ This project is a ROS2 LED Strip controller written in C++ using pigpio with but
 - The `button_pub` node defines a publisher for `"led_controller1/new_color"` according to GPIO input from a pushbutton. Depending on which color is next in the queue, a button press will immediately publish a new color. The color rotation goes as follows: `White → Red → Blue → Purple → Medium Slate Blue → Off → White`. New colors can be added in the `button_pub.cpp` file in the node's constructor.
 
 ## Equipment
-- 24V LED strip with RGB input
-- 3 logic-level mosfets
+- 24V LED strip and power supply with RGB input
+- 3 logic-level mosfets for LED strip control
 - Raspberry Pi 3B+ running Ubuntu Server 20.04 ([Ubuntu is recommended for ROS2 installation](https://ubuntu.com/raspberry-pi))
 - Pushbutton
 
