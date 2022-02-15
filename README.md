@@ -1,4 +1,4 @@
-### ROS2 LED Strip Controller
+# ROS2 LED Strip Controller
 This project is a ROS2 LED Strip controller written in C++ using pigpio with button input for switching colors, running with `pigpio` on a Raspberry Pi Model 3B+. 
 
 ## Design
