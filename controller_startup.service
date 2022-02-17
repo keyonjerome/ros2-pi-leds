@@ -4,6 +4,7 @@ Description=Start up ros2-pi-leds
 [Service]
 Type=oneshot
 ExecStart=/home/ubuntu/code/ros2-pi-leds/startup_script.sh
+User=root
 
 [Install]
 WantedBy=multi-user.target
