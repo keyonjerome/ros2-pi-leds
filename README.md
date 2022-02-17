@@ -33,3 +33,9 @@ The following GPIO constants can be changed in their corresponding header files.
 6. In a new terminal, install the newly built package using `. install/setup.bash` from within the repository folder.
 7. Before running the program, kill all currently running `pigpio` processes: `killall pigpiod`
 8. Run the program with `ros2 launch led_strip_controller led_launch.py`.
+
+## Running on Raspberry Pi Startup (Ubuntu 20.04 Systemd)
+1. In both `startup_script.sh`, and `controller_startup.service`, change the references to this repository's files to match where *you* downloaded this repository.
+2. Give the system permissions to run `startup_script.sh`: `sudo chmod 775 [your_path]/ros2-pi-leds/startup_script.sh`
+3. Copy `controller_startup.service` to `/etc/systemd/system/` (e.g: `sudo cp controller_startup.service /etc/systemd/system/`).
+4. Enable the service from the terminal with `sudo systemctl enable controller_startup.service`. To start the service at the same time, run `sudo systemctl --now enable controller_startup.service`
