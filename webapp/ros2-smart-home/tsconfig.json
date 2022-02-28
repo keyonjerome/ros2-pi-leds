@@ -25,17 +25,18 @@
     ],
     "paths": {
       "path": [
-        "./node_modules/path-browserify",
-        "./node_modules/util",
-        "./node_modules/os-browserify"
-      ]
+        "./node_modules/path-browserify"
+      ],
+      "os": ["./node_modules/os-browserify"],
+      "constants": ["./node_modules/constants-browserify"],
+      "stream": ["./node_modules/stream-browserify"]
     }
 
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
-    "strictInjectionParameters": true,
-    "strictInputAccessModifiers": true,
-    "strictTemplates": true
+    "strictInjectionParameters": false,
+    "strictInputAccessModifiers": false,
+    "strictTemplates": false
   }
 }
