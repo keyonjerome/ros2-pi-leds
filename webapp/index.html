@@ -42,13 +42,13 @@
   var example = new ROSLIB.Topic({
     ros : ros,
     name : '/example_topic',
-    messageType : 'std_msgs/String'
+    messageType : 'std_msgs/ColorRGBA'
   });
 
   var count = 0;
   setInterval(() => {
     var message = 'hello from ros2bridge ' + count++;
-    example.publish({data: message});
+    example.publish({r:205,g:205,b:205,a:0});
     document.getElementById("publisher").innerText = message;
   }, 1000);
 </script>
