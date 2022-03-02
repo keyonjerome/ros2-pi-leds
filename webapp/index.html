@@ -4,6 +4,7 @@
 <meta charset="utf-8" />
 <script src="https://static.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
 <script src="https://static.robotwebtools.org/roslibjs/current/roslib.js"></script>
+<script src="./iro.min.js" type="text/javascript"></script>
 
 <script>
   // Connecting to ROS
@@ -41,21 +42,35 @@
   // Publish a Topic
   var example = new ROSLIB.Topic({
     ros : ros,
-    name : '/example_topic',
+    name : '/web_color',
     messageType : 'std_msgs/ColorRGBA'
   });
 
   var count = 0;
   setInterval(() => {
     var message = 'hello from ros2bridge ' + count++;
-    example.publish({r:205,g:205,b:205,a:0});
+    example.publish({r:205,g:205,b:205,a:0.0});
     document.getElementById("publisher").innerText = message;
   }, 1000);
+
+
+  var colorPicker = new iro.ColorPicker('#picker');
+    function onColorChange(color) {
+      console.log("publishing " + color.red + ' ' +  color.green + ' ' + color.blue)
+      example.publish({r:color.red,g:color.green,b:color.blue,a:0.0});
+    }
+    
+    // add color:change listener
+    colorPicker.on('color:change', onColorChange);
 </script>
 </head>
 
 <body>
+  
   <h1>Simple Publisher Example</h1>
+  <br>
+  <div id="picker"></div>
+  <br>
   <p>This example will pubilish a topic named "example_topic".</p>
   <div id="statusIndicator">
     <p id="connecting">
