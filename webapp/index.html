@@ -39,9 +39,14 @@ crossorigin="anonymous">
     document.getElementById('connected').style.display = 'none';
     document.getElementById('closed').style.display = 'inline';
   });
+  var ip =  self.location.host;
+  // trim off '3000' of the self locaton host and add 9090 so that it's ws://[ip]:9090
+  // as that is where ROS listens to msgs
+  var rosIP = 'ws://' + ip.substring(0,ip.length-4) + '9090' 
 
+  // console.log("IP: " + self.location.host)
   // Create a connection to the rosbridge WebSocket server.
-  ros.connect('ws://localhost:9090');
+  ros.connect(rosIP);
 
   // Publish a Topic
   var example = new ROSLIB.Topic({
@@ -72,6 +77,8 @@ crossorigin="anonymous">
     function onColorChange(color) {
       console.log("publishing " + color.red + ' ' +  color.green + ' ' + color.blue)
       example.publish({r:color.red,g:color.green,b:color.blue,a:0.0});
+      console.log("IP: " + 'ws://' + ip.substring(0,ip.length-4) + '9090')
+
     }
     
     // add color:change listener
@@ -88,7 +95,7 @@ crossorigin="anonymous">
         <!-- <h3 class="mb-4 ">Pump Liquid Levels</h3> -->
         <!-- <p>Pump {{key}} : {{val}}</p> -->
 
-        <div class="offset-4 col-2 text-center align-center mx-0 px-0">
+        <div class="offset-4 col-4 text-center align-center mx-0 px-0">
         <div id="picker" class="text-center align-text-center mx-0"></div>
         <div class="col-4">
 
