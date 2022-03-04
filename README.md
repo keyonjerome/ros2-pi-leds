@@ -26,11 +26,11 @@ The following GPIO constants can be changed in their corresponding header files.
 
 ## Installation and How To Run
 1. Make sure ROS2 Galactic and pigpio are installed onto your Raspberry Pi. `pigpio-master` should be in your `home/user` directory (`~/`), as the CMakeLists.txt configuration searches for it there.
-2. Clone this repository and after sourcing your ROS2 installation (`source /opt/ros/galactic/setup.bash`), run `colcon build` in the repository folder.
+2. Clone this repository and after sourcing your ROS2 installation (`source /opt/ros/galactic/setup.bash`), run `colcon build` in the `ROS2CPP/led_strip_controller` repository folder.
 3. Open a new terminal.
 4. Enter your root shell using `sudo -i`. This is required for `pigpio` GPIO setting.
 5. Navigate to the repository directory in the new shell.
-6. In a new terminal, install the newly built package using `. install/setup.bash` from within the repository folder.
+6. In a new terminal, install the newly built package using `. install/setup.bash` from within the `ROS2CPP/led_strip_controller` repository folder.
 7. Before running the program, kill all currently running `pigpio` processes: `killall pigpiod`
 8. Run the program with `ros2 launch led_strip_controller led_launch.py`.
 
