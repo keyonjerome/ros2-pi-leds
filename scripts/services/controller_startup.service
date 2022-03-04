@@ -1,0 +1,14 @@
+[Unit]
+Description=Start up ros2-pi-leds
+After=network.target
+After=multi-user.target
+After=systemd-user-sessions.service
+After=network-online.target
+
+[Service]
+Type=simple
+User=root
+ExecStart=/home/ubuntu/code/ros2-pi-leds/scripts/startup_script.sh
+
+[Install]
+WantedBy=multi-user.target

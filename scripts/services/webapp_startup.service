@@ -1,0 +1,14 @@
+[Unit]
+Description=Start up webapp
+After=network.target
+After=multi-user.target
+After=systemd-user-sessions.service
+After=network-online.target
+
+[Service]
+Type=simple
+User=root
+ExecStart= node /home/ubuntu/code/ros2-pi-leds/webapp/index.js
+
+[Install]
+WantedBy=multi-user.target
